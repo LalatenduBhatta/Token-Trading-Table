@@ -5,35 +5,20 @@ import { TokenTable } from '@/components/trading/TokenTable/TokenTable';
 import { TokenTableSkeleton } from '@/components/trading/TokenTable/TokenTableSkeleton';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { TradingViewWidget } from '@/components/trading/TradingViewWidget/TradingViewWidget';
+import { MarketOverview } from '@/components/trading/MarketOverview/MarketOverview';
+import { Watchlist } from '@/components/trading/Watchlist/Watchlist';
 import { useResponsive } from '@/hooks/useResponsive';
 
 export default function HomePage() {
-  const { isMobile, isTablet } = useResponsive();
+  const { isMobile } = useResponsive();
 
   return (
     <div className="space-y-6">
-      {/* Header Section */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white md:text-3xl">
-            Token Discovery
-          </h1>
-          <p className="text-sm text-gray-400">
-            Real-time token prices, trends, and trading opportunities
-          </p>
-        </div>
-        
-        <div className="flex items-center gap-3">
-          <div className="rounded-lg bg-gray-900 px-4 py-2">
-            <span className="text-sm font-medium text-gray-300">Total Tokens:</span>
-            <span className="ml-2 text-lg font-bold text-white">1,248</span>
-          </div>
-          <div className="rounded-lg bg-blue-500/10 px-4 py-2">
-            <span className="text-sm font-medium text-blue-400">24h Volume:</span>
-            <span className="ml-2 text-lg font-bold text-white">$2.4B</span>
-          </div>
-        </div>
-      </div>
+      {/* Market Overview */}
+      <MarketOverview />
+
+      {/* Watchlist for desktop */}
+      {!isMobile && <Watchlist />}
 
       {/* Trading View Chart */}
       <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-4">
@@ -80,6 +65,9 @@ export default function HomePage() {
           </Suspense>
         </div>
       </ErrorBoundary>
+
+      {/* Mobile Watchlist */}
+      {isMobile && <Watchlist />}
 
       {/* Mobile Responsive Info */}
       {isMobile && (
