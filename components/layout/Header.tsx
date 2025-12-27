@@ -1,52 +1,86 @@
 'use client';
 
-import { Search, User, Wallet } from 'lucide-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Menu, Sun, Moon, Bell, Settings } from 'lucide-react';
+import { 
+  toggleSidebar, 
+  setMobileMenuOpen,
+  toggleTheme,
+  useIsDarkMode,
+  useUnreadNotificationsCount,
+  openModal
+} from '@/lib/store/hooks';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { NotificationBell } from '@/components/utils/NotificationBell';
-import { cn } from '@/lib/utils/cn';
 
 export function Header() {
+  const dispatch = useDispatch();
+  const isDarkMode = useIsDarkMode();
+  const unreadNotifications = useUnreadNotificationsCount();
+
+  const handleThemeToggle = () => {
+    dispatch(toggleTheme());
+  };
+
+  const handleOpenSettings = () => {
+    dispatch(openModal({ type: 'settings' }));
+  };
+
   return (
     <header className="sticky top-0 z-40 border-b border-gray-800 bg-gray-900/95 backdrop-blur-sm">
-      <div className="flex h-16 items-center justify-between px-4">
-        {/* Left side - Search */}
-        <div className="flex flex-1 items-center gap-4">
-          <div className="relative hidden flex-1 md:block">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
-            <Input
-              type="search"
-              placeholder="Search tokens, pairs, or addresses..."
-              className="w-full pl-10 md:w-[300px] lg:w-[400px]"
-            />
-          </div>
-        </div>
-
-        {/* Right side - Actions */}
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" className="hidden gap-2 sm:flex">
-            <Wallet className="h-4 w-4" />
-            Connect Wallet
-          </Button>
-          <Button variant="ghost" size="sm" className="sm:hidden">
-            <Wallet className="h-4 w-4" />
-          </Button>
-
-          <NotificationBell />
-
+      <div className="flex h-16 items-center justify-between px-4 md:px-6">
+        {/* Left side */}
+        <div className="flex items-center gap-4">
           <Button
             variant="ghost"
             size="icon"
-            className="relative h-8 w-8 rounded-full"
+            onClick={() => dispatch(toggleSidebar())}
+            className="md:hidden"
           >
-            <User className="h-4 w-4" />
+            <Menu className="h-5 w-5" />
+          </Button>
+          
+          <div className="flex items-center gap-2">
+            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600" />
+            <span className="text-xl font-bold text-white">Axiom Trade</span>
+            <span className="hidden rounded-full bg-green-500/20 px-2 py-1 text-xs font-medium text-green-400 md:inline">
+              Live
+            </span>
+          </div>
+        </div>
+
+        {/* Right side */}
+        <div className="flex items-center gap-2">
+          {/* Theme toggle */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleThemeToggle}
+            className="hidden md:flex"
+          >
+            {isDarkMode ? (
+              <Sun className="h-5 w-5" />
+            ) : (
+              <Moon className="h-5 w-5" />
+            )}
           </Button>
 
-          {/* Network Indicator */}
-          <div className="hidden items-center gap-2 rounded-lg bg-gray-800 px-3 py-1.5 sm:flex">
-            <div className="h-2 w-2 rounded-full bg-green-500" />
-            <span className="text-sm font-medium text-white">Ethereum</span>
-          </div>
+          {/* Notifications */}
+          <NotificationBell />
+
+          {/* Settings */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleOpenSettings}
+          >
+            <Settings className="h-5 w-5" />
+          </Button>
+
+          {/* Wallet connection */}
+          <Button variant="default" className="hidden md:flex">
+            Connect Wallet
+          </Button>
         </div>
       </div>
     </header>

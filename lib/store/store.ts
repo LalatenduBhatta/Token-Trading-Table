@@ -11,7 +11,14 @@ export const store = configureStore({
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false,
+      serializableCheck: {
+        // Ignore these action types
+        ignoredActions: ['ui/openModal', 'ui/addNotification'],
+        // Ignore these field paths in all actions
+        ignoredActionPaths: ['payload.action.onClick', 'payload.data'],
+        // Ignore these paths in the state
+        ignoredPaths: ['ui.modals', 'ui.notifications'],
+      },
     }),
   devTools: process.env.NODE_ENV !== 'production',
 });

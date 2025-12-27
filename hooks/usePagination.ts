@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo,useCallback } from 'react';
 
 export interface PaginationConfig {
   currentPage: number;
